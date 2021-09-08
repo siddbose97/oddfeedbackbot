@@ -1,15 +1,20 @@
 from dotenv import load_dotenv
 load_dotenv()
 
+from time import sleep
 import os
 import telebot
-from telebot import types
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+import geopy.distance
+from telegram import Location, KeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
+from flask import Flask, request
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from datetime import datetime
 
 
 TOKEN = "1835053064:AAF4txvpIA4em49xZwBYQACArT4OmQC7ZhQ"
 bot = telebot.TeleBot(TOKEN)
+PORT = int(os.environ.get('PORT', 8443))
 
 oddDict = {}
 
@@ -109,8 +114,8 @@ SAR21Map = {1: "BARREL", 2: "SCOPE", 3: "CHARGING HANDLE", 4:"LAD", 5:"MUZZLE AN
 
 #=============================================================
 # Handle '/start' and '/help'
-@bot.message_handler(commands=['ODD' and 'odd'])
-def send_welcome(message):
+@bot.message_handler(commands=['start'])
+def start(message):
     msg = bot.reply_to(message, """\
 Hi there, I am the ODD Feedback Bot. What unit are you from?
 """)
@@ -270,4 +275,40 @@ def otherRMKStep(message):
         
     except Exception as e:
         bot.reply_to(message, 'oooops')
-bot.polling()
+
+
+def qFunc(update, context):
+    try:
+        bot.send_message(update.effective_message.chat.id,"Unrecognized Input! Please press /start to try again!")
+    except Exception:
+        errorString = "Sorry something went wrong! Please press /start to try again!"
+        bot.send_message(update.effective_message.chat.id,errorString)
+def main():
+    """Start the bot."""
+    # Create the Updater and pass it your bot's token.
+    # Make sure to set use_context=True to use the new context based callbacks
+    # Post version 12 this will no longer be necessary
+    updater = Updater(TOKEN, use_context=True)
+
+    # Get the dispatcher to register handlers
+    dp = updater.dispatcher
+
+    # on different commands - answer in Telegram
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("help", help))
+    
+    startList = ["/start", "RESTART"]
+    #message handling
+    dp.add_handler(MessageHandler(Filters.text(startList), start)) 
+    dp.add_handler(MessageHandler(Filters.text, qFunc)) 
+
+    # add handlers
+    updater.start_webhook(listen="0.0.0.0",
+                        port=PORT,
+                        url_path=TOKEN,
+                        webhook_url="https://polar-chamber-36116.herokuapp.com/" + TOKEN)
+    updater.idle()
+
+
+if __name__ == '__main__':
+    main()
