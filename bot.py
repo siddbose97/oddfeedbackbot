@@ -16,7 +16,7 @@ updater = telegram.ext.Updater(API_KEY)
 dispatcher = updater.dispatcher
 # Our states, as integers
 
-DIVSTEP, COYSTEP, WPNSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(8)
+BATSTEP, COYSTEP, WPNSTEP,BUTTSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(9)
 
 
 
@@ -30,12 +30,12 @@ def start(update_obj, context):
     
 
     update_obj.message.reply_text("Hello there, which unit are you from?",reply_markup=kb)
-    # go to the Division state
-    return DIVSTEP
+    # go to the Batallion state
+    return BATSTEP
 
 
-def divstep(update_obj, context):
-    update_obj.message.reply_text("divstep")
+def batStep(update_obj, context):
+    update_obj.message.reply_text("batstep")
 
     return COYSTEP
 
@@ -47,6 +47,11 @@ def coyStep(update_obj, context):
 
 def wpnStep(update_obj, context):
     update_obj.message.reply_text("wpnStep")
+
+    return BUTTSTEP
+
+def buttStep(update_obj, context):
+    update_obj.message.reply_text("buttStep")
 
     return DEFECTSTEP
 
@@ -97,9 +102,10 @@ def main():
     handler = telegram.ext.ConversationHandler(
         entry_points=[telegram.ext.CommandHandler('start', start)],
         states={
-                DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text(unitbuttons.keys()), divstep)],
+                BATSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text(unitbuttons.keys()), batStep)],
                 COYSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
                 WPNSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, wpnStep)],
+                BUTTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, buttStep)],
                 DEFECTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, defectStep)],
                 DEFECTIDSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, defectIDStep)],
                 RMKCHKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, rmkchkStep)],
