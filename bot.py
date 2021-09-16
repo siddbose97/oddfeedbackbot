@@ -32,8 +32,8 @@ unitbuttons = {
 def start(update_obj, context):
     # send the question, and show the keyboard markup (suggested answers)
     kb = telebot.types.ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard = True)
-    kb.add(unitbuttons["armour"], unitbuttons["artillery"],unitbuttons["engineers"],unitbuttons["commandos"],\
-        unitbuttons["guards"],unitbuttons["infantry"],unitbuttons["signals"])
+    kb.add(unitbuttons["Armour"], unitbuttons["Artillery"],unitbuttons["Engineers"],unitbuttons["Commandos"],\
+        unitbuttons["Guards"],unitbuttons["Infantry"],unitbuttons["Signals"])
 
     update_obj.message.reply_text("Hello there, which unit are you from?",kb)
     
