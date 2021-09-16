@@ -13,18 +13,20 @@ updater = telegram.ext.Updater(API_KEY)
 # Retrieve the dispatcher, which will be used to add handlers
 dispatcher = updater.dispatcher
 # Our states, as integers
-DIVSTEP = 0
-QUESTION = 1
-CANCEL = 2
-COYSTEP = 3
+
+DIVSTEP, COYSTEP, WPNSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(8)
+
+buttons = {
+    "units":['Armour', 'Artillery','Combat Engineers', "Commandos", "Guards","Infantry","Signals"]
+}
 
 # The entry function
 def start(update_obj, context):
     # send the question, and show the keyboard markup (suggested answers)
-    update_obj.message.reply_text("Hello there, do you want to answer a question? (Yes/No)",
-        reply_markup=telegram.ReplyKeyboardMarkup([['Yes', 'No']], one_time_keyboard=True)
+    update_obj.message.reply_text("Hello there, which unit are you from?",
+        reply_markup=telegram.ReplyKeyboardMarkup([buttons['units']], one_time_keyboard=True)
     )
-    # go to the WELCOME state
+    # go to the Division state
     return DIVSTEP
 def divstep(update_obj, context):
     update_obj.message.reply_text("divstep")
