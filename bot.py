@@ -17,24 +17,26 @@ dispatcher = updater.dispatcher
 
 DIVSTEP, COYSTEP, WPNSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(8)
 
-buttons = {
-    "units":[
-        telebot.types.KeyboardButton(text='Armour'),
-        telebot.types.KeyboardButton(text='Artillery'),
-        telebot.types.KeyboardButton(text='Engineers'),
-        telebot.types.KeyboardButton(text='Commandos'),
-        telebot.types.KeyboardButton(text='Guards'),
-        telebot.types.KeyboardButton(text='Infantry'),
-        telebot.types.KeyboardButton(text='Signals')
-    ]
+unitbuttons = {
+    'Armour':telebot.types.KeyboardButton(text='Armour'),
+    'Artillery':telebot.types.KeyboardButton(text='Artillery'),
+    'Engineers':telebot.types.KeyboardButton(text='Engineers'),
+    'Commandos':telebot.types.KeyboardButton(text='Commandos'),
+    'Guards':telebot.types.KeyboardButton(text='Guards'),
+    'Infantry':telebot.types.KeyboardButton(text='Infantry'),
+    'Signals':telebot.types.KeyboardButton(text='Signals')
+    
 }
 
 # The entry function
 def start(update_obj, context):
     # send the question, and show the keyboard markup (suggested answers)
-    update_obj.message.reply_text("Hello there, which unit are you from?",
-        reply_markup=telegram.ReplyKeyboardMarkup([buttons['units']], one_time_keyboard=True)
-    )
+    kb = telebot.types.ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard = True)
+    kb.add(unitbuttons["armour"], unitbuttons["artillery"],unitbuttons["engineers"],unitbuttons["commandos"],\
+        unitbuttons["guards"],unitbuttons["infantry"],unitbuttons["signals"])
+
+    update_obj.message.reply_text("Hello there, which unit are you from?",kb)
+    
     # go to the Division state
     return DIVSTEP
 def divstep(update_obj, context):
@@ -84,7 +86,7 @@ def main():
     handler = telegram.ext.ConversationHandler(
         entry_points=[telegram.ext.CommandHandler('start', start)],
         states={
-                DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, divstep)],
+                DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text(unitbuttons.keys()), divstep)],
                 CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)],
                 COYSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
         },
