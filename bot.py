@@ -31,8 +31,10 @@ unitbuttons = {
 # The entry function
 def start(update_obj, context):
     # send the question, and show the keyboard markup (suggested answers)
-    listOfButtons = list(unitbuttons.values())
-    kb = telegram.ReplyKeyboardMarkup(keyboard=[listOfButtons],resize_keyboard = True, one_time_keyboard = True)
+    list1 = [unitbuttons['Armour'], unitbuttons['Artillery']]
+    list2 = [unitbuttons['Engineers'], unitbuttons['Commandos'], unitbuttons['Guards']]
+    list3 = [unitbuttons['Infantry'], unitbuttons['Signals']]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1, list2, list3],resize_keyboard = True, one_time_keyboard = True)
     #kb.add(telegram.KeyboardButton(text='Armour'))
     # kb.add(unitbuttons["Armour"], unitbuttons["Artillery"],unitbuttons["Engineers"],unitbuttons["Commandos"],\
     #     unitbuttons["Guards"],unitbuttons["Infantry"],unitbuttons["Signals"])
