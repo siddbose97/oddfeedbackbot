@@ -32,39 +32,10 @@ def divstep(update_obj, context):
     )
 
     return CANCEL
-# helper function, generates new numbers and sends the question
-def randomize_numbers(update_obj, context):
-    # store the numbers in the context
-    context.user_data['rand_x'], context.user_data['rand_y'] = randint(0,1000), randint(0, 1000)
-    # send the question
-    update_obj.message.reply_text(f"Calculate {context.user_data['rand_x']}+{context.user_data['rand_y']}")
 
-# in the WELCOME state, check if the user wants to answer a question
-def welcome(update_obj, context):
-    if update_obj.message.text.lower() in ['yes', 'y']:
-        # send question, and go to the QUESTION state
-        randomize_numbers(update_obj, context)
-        return QUESTION
-    else:
-        # go to the CANCEL state
-        return CANCEL
 
-# in the QUESTION state
-def question(update_obj, context):
-    # expected solution
-    solution = int(context.user_data['rand_x']) + int(context.user_data['rand_y'])
-    # check if the solution was correct
-    if solution == int(update_obj.message.text):
-        # correct answer, ask the user if he found tutorial helpful, and go to the CORRECT state
-        update_obj.message.reply_text("Correct answer!")
-        update_obj.message.reply_text("Was this tutorial helpful to you?")
-        return CORRECT
-    else:
-        # wrong answer, reply, send a new question, and loop on the QUESTION state
-        update_obj.message.reply_text("Wrong answer :'(")
-        # send another random numbers calculation
-        randomize_numbers(update_obj, context)
-        return QUESTION
+
+
 
 # in the CORRECT state
 def correct(update_obj, context):
@@ -85,24 +56,30 @@ def cancel(update_obj, context):
     )
     return telegram.ext.ConversationHandler.END
 
-# a regular expression that matches yes or no
-yes_no_regex = re.compile(r'^(yes|no|y|n)$', re.IGNORECASE)
-# Create our ConversationHandler, with only one state
-handler = telegram.ext.ConversationHandler(
-      entry_points=[telegram.ext.CommandHandler('start', start)],
-      states={
-            DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, divstep)],
-            QUESTION: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(r'^\d+$'), question)],
-            CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)],
-            CORRECT: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(yes_no_regex), correct)],
-      },
-      fallbacks=[telegram.ext.CommandHandler('cancel', cancel)],
-      )
-# add the handler to the dispatcher
-dispatcher.add_handler(handler)
-# start polling for updates from Telegram
-updater.start_webhook(listen="0.0.0.0",
-                        port=PORT,
-                        url_path=API_KEY,
-                        webhook_url="https://still-sierra-92948.herokuapp.com/" + API_KEY)
-updater.idle()
+
+
+def main():
+    # a regular expression that matches yes or no
+    yes_no_regex = re.compile(r'^(yes|no|y|n)$', re.IGNORECASE)
+    # Create our ConversationHandler, with only one state
+    handler = telegram.ext.ConversationHandler(
+        entry_points=[telegram.ext.CommandHandler('start', start)],
+        states={
+                DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, divstep)],
+                CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)],
+                CORRECT: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(yes_no_regex), correct)],
+        },
+        fallbacks=[telegram.ext.CommandHandler('cancel', cancel)],
+        )
+    # add the handler to the dispatcher
+    dispatcher.add_handler(handler)
+    # start polling for updates from Telegram
+    updater.start_webhook(listen="0.0.0.0",
+                            port=PORT,
+                            url_path=API_KEY,
+                            webhook_url="https://still-sierra-92948.herokuapp.com/" + API_KEY)
+    updater.idle()
+
+
+if __name__ == '__main__':
+    main()
