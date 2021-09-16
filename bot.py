@@ -1,4 +1,5 @@
 import telegram
+import telebot
 import telegram.ext
 import re
 from random import randint
@@ -17,7 +18,15 @@ dispatcher = updater.dispatcher
 DIVSTEP, COYSTEP, WPNSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(8)
 
 buttons = {
-    "units":['Armour', 'Artillery','Combat Engineers', "Commandos", "Guards","Infantry","Signals"]
+    "units":[
+        telebot.types.KeyboardButton(text='Armour'),
+        telebot.types.KeyboardButton(text='Artillery'),
+        telebot.types.KeyboardButton(text='Engineers'),
+        telebot.types.KeyboardButton(text='Commandos'),
+        telebot.types.KeyboardButton(text='Guards'),
+        telebot.types.KeyboardButton(text='Infantry'),
+        telebot.types.KeyboardButton(text='Signals')
+    ]
 }
 
 # The entry function
