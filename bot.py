@@ -29,14 +29,12 @@ DIVSTEP, COYSTEP, WPNSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP = range
 
 #=============================================================
 def start(update, context:CallbackContext):
-    msg = bot.reply_to(update.effective_message, """\
-Hi there, I am the ODD Feedback Bot. What unit are you from?
-""")
+    update.message.reply_text("Start")
 
     return DIVSTEP
     
 def divStep(update, context:CallbackContext):
-    bot.send_message(update.effective_message.chat.id,"Divstep")
+    update.message.reply_text("divstep")
 
     return COYSTEP
 
