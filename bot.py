@@ -26,8 +26,10 @@ def start(update_obj, context):
     )
     # go to the WELCOME state
     return DIVSTEP
-def divstep(update, context):
-    update.message.reply_text("divstep")
+def divstep(update_obj, context):
+    update_obj.message.reply_text("Hello there, do you want to answer a question? (Yes/No)",
+        reply_markup=telegram.ReplyKeyboardMarkup([['Yes', 'No']], one_time_keyboard=True)
+    )
 
     return CANCEL
 # helper function, generates new numbers and sends the question
