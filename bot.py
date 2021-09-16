@@ -35,7 +35,7 @@ def start(update_obj, context):
     kb.add(unitbuttons["Armour"], unitbuttons["Artillery"],unitbuttons["Engineers"],unitbuttons["Commandos"],\
         unitbuttons["Guards"],unitbuttons["Infantry"],unitbuttons["Signals"])
 
-    update_obj.message.reply_text("Hello there, which unit are you from?",kb)
+    update_obj.message.reply_text("Hello there, which unit are you from?",reply_markup=kb)
     
     # go to the Division state
     return DIVSTEP
