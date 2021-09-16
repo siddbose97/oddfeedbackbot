@@ -18,13 +18,13 @@ dispatcher = updater.dispatcher
 DIVSTEP, COYSTEP, WPNSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(8)
 
 unitbuttons = {
-    'Armour':telebot.types.KeyboardButton(text='Armour'),
-    'Artillery':telebot.types.KeyboardButton(text='Artillery'),
-    'Engineers':telebot.types.KeyboardButton(text='Engineers'),
-    'Commandos':telebot.types.KeyboardButton(text='Commandos'),
-    'Guards':telebot.types.KeyboardButton(text='Guards'),
-    'Infantry':telebot.types.KeyboardButton(text='Infantry'),
-    'Signals':telebot.types.KeyboardButton(text='Signals')
+    'Armour':telegram.KeyboardButton(text='Armour'),
+    'Artillery':telegram.KeyboardButton(text='Artillery'),
+    'Engineers':telegram.KeyboardButton(text='Engineers'),
+    'Commandos':telegram.KeyboardButton(text='Commandos'),
+    'Guards':telegram.KeyboardButton(text='Guards'),
+    'Infantry':telegram.KeyboardButton(text='Infantry'),
+    'Signals':telegram.KeyboardButton(text='Signals')
     
 }
 
