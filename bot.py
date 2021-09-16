@@ -99,11 +99,11 @@ def main():
         states={
                 DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text(unitbuttons.keys()), divstep)],
                 COYSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
-                WPNSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
-                DEFECTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
-                DEFECTIDSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
-                RMKCHKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
-                RMKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
+                WPNSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, wpnStep)],
+                DEFECTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, defectStep)],
+                DEFECTIDSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, defectIDStep)],
+                RMKCHKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, rmkchkStep)],
+                RMKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, rmkstep)],
                 CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)]
         },
         fallbacks=[telegram.ext.CommandHandler('cancel', cancel)],
