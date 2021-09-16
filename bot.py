@@ -4,6 +4,7 @@ import telegram.ext
 import re
 from random import randint
 import os
+from buttons import unitbuttons
 
 # The API Key we received for our bot
 API_KEY = os.environ.get('TOKEN')
@@ -17,16 +18,7 @@ dispatcher = updater.dispatcher
 
 DIVSTEP, COYSTEP, WPNSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(8)
 
-unitbuttons = {
-    'Armour':telegram.KeyboardButton(text='Armour'),
-    'Artillery':telegram.KeyboardButton(text='Artillery'),
-    'Engineers':telegram.KeyboardButton(text='Engineers'),
-    'Commandos':telegram.KeyboardButton(text='Commandos'),
-    'Guards':telegram.KeyboardButton(text='Guards'),
-    'Infantry':telegram.KeyboardButton(text='Infantry'),
-    'Signals':telegram.KeyboardButton(text='Signals')
-    
-}
+
 
 # The entry function
 def start(update_obj, context):
@@ -35,9 +27,7 @@ def start(update_obj, context):
     list2 = [unitbuttons['Engineers'], unitbuttons['Commandos'], unitbuttons['Guards']]
     list3 = [unitbuttons['Infantry'], unitbuttons['Signals']]
     kb = telegram.ReplyKeyboardMarkup(keyboard=[list1, list2, list3],resize_keyboard = True, one_time_keyboard = True)
-    #kb.add(telegram.KeyboardButton(text='Armour'))
-    # kb.add(unitbuttons["Armour"], unitbuttons["Artillery"],unitbuttons["Engineers"],unitbuttons["Commandos"],\
-    #     unitbuttons["Guards"],unitbuttons["Infantry"],unitbuttons["Signals"])
+    
 
     update_obj.message.reply_text("Hello there, which unit are you from?",reply_markup=kb)
     # go to the Division state
@@ -53,6 +43,31 @@ def divstep(update_obj, context):
 def coyStep(update_obj, context):
     update_obj.message.reply_text("coystep")
 
+    return WPNSTEP
+
+def wpnStep(update_obj, context):
+    update_obj.message.reply_text("wpnStep")
+
+    return DEFECTSTEP
+
+def defectStep(update_obj, context):
+    update_obj.message.reply_text("defectStep")
+
+    return DEFECTIDSTEP
+
+def defectIDStep(update_obj, context):
+    update_obj.message.reply_text("defectIDStep")
+
+    return RMKCHKSTEP
+
+def rmkchkStep(update_obj, context):
+    update_obj.message.reply_text("rmkchkStep")
+
+    return RMKSTEP
+
+def rmkstep(update_obj, context):
+    update_obj.message.reply_text("rmkstep")
+
     return CANCEL
 
 
@@ -62,17 +77,6 @@ def coyStep(update_obj, context):
 
 
 
-
-# in the CORRECT state
-def correct(update_obj, context):
-    if update_obj.message.text.lower() in ['yes', 'y']:
-        update_obj.message.reply_text("Glad it was useful! ^^")
-    else:
-        update_obj.message.reply_text("You must be a programming wizard already!")
-    # get the user's first name
-    first_name = update_obj.message.from_user['first_name']
-    update_obj.message.reply_text(f"See you {first_name}!, bye")
-    return telegram.ext.ConversationHandler.END
 
 def cancel(update_obj, context):
     # get the user's first name
@@ -88,12 +92,19 @@ def main():
     # a regular expression that matches yes or no
     yes_no_regex = re.compile(r'^(yes|no|y|n)$', re.IGNORECASE)
     # Create our ConversationHandler, with only one state
+
+
     handler = telegram.ext.ConversationHandler(
         entry_points=[telegram.ext.CommandHandler('start', start)],
         states={
                 DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text(unitbuttons.keys()), divstep)],
-                CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)],
                 COYSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
+                WPNSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
+                DEFECTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
+                DEFECTIDSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
+                RMKCHKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
+                RMKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
+                CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)]
         },
         fallbacks=[telegram.ext.CommandHandler('cancel', cancel)],
         )
