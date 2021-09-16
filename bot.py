@@ -32,13 +32,15 @@ unitbuttons = {
 def start(update_obj, context):
     # send the question, and show the keyboard markup (suggested answers)
     kb = telebot.types.ReplyKeyboardMarkup(resize_keyboard = True, one_time_keyboard = True)
-    kb.add(unitbuttons["Armour"], unitbuttons["Artillery"],unitbuttons["Engineers"],unitbuttons["Commandos"],\
-        unitbuttons["Guards"],unitbuttons["Infantry"],unitbuttons["Signals"])
+    kb.add(telebot.types.KeyboardButton(text='Armour'))
+    # kb.add(unitbuttons["Armour"], unitbuttons["Artillery"],unitbuttons["Engineers"],unitbuttons["Commandos"],\
+    #     unitbuttons["Guards"],unitbuttons["Infantry"],unitbuttons["Signals"])
 
     update_obj.message.reply_text("Hello there, which unit are you from?",reply_markup=kb)
-    
     # go to the Division state
     return DIVSTEP
+
+
 def divstep(update_obj, context):
     update_obj.message.reply_text("divstep")
 
