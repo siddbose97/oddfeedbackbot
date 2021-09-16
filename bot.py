@@ -29,7 +29,7 @@ def start(update_obj, context):
 def divstep(update, context):
     update.message.reply_text("divstep")
 
-    return telegram.ext.ConversationHandler.END
+    return CANCEL
 # helper function, generates new numbers and sends the question
 def randomize_numbers(update_obj, context):
     # store the numbers in the context
@@ -91,7 +91,7 @@ handler = telegram.ext.ConversationHandler(
       states={
             DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, divstep)],
             QUESTION: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(r'^\d+$'), question)],
-            CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(yes_no_regex), cancel)],
+            CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)],
             CORRECT: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(yes_no_regex), correct)],
       },
       fallbacks=[telegram.ext.CommandHandler('cancel', cancel)],
