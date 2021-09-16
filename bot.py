@@ -16,7 +16,7 @@ dispatcher = updater.dispatcher
 DIVSTEP = 0
 QUESTION = 1
 CANCEL = 2
-CORRECT = 3
+COYSTEP = 3
 
 # The entry function
 def start(update_obj, context):
@@ -27,11 +27,19 @@ def start(update_obj, context):
     # go to the WELCOME state
     return DIVSTEP
 def divstep(update_obj, context):
-    update_obj.message.reply_text("Hello there, do you want to answer a question?? (Yes/No)",
-        reply_markup=telegram.ReplyKeyboardMarkup([['Yes', 'No']], one_time_keyboard=True)
-    )
+    update_obj.message.reply_text("divstep")
+
+    return COYSTEP
+
+
+def coyStep(update_obj, context):
+    update_obj.message.reply_text("coystep")
 
     return CANCEL
+
+
+
+
 
 
 
@@ -67,7 +75,7 @@ def main():
         states={
                 DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, divstep)],
                 CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)],
-                CORRECT: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(yes_no_regex), correct)],
+                COYSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
         },
         fallbacks=[telegram.ext.CommandHandler('cancel', cancel)],
         )
