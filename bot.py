@@ -6,12 +6,14 @@ import os
 
 # The API Key we received for our bot
 API_KEY = os.environ.get('TOKEN')
+PORT = int(os.environ.get('PORT', 8443))
+
 # Create an updater object with our API Key
 updater = telegram.ext.Updater(API_KEY)
 # Retrieve the dispatcher, which will be used to add handlers
 dispatcher = updater.dispatcher
 # Our states, as integers
-WELCOME = 0
+DIVSTEP = 0
 QUESTION = 1
 CANCEL = 2
 CORRECT = 3
@@ -23,8 +25,11 @@ def start(update_obj, context):
         reply_markup=telegram.ReplyKeyboardMarkup([['Yes', 'No']], one_time_keyboard=True)
     )
     # go to the WELCOME state
-    return WELCOME
+    return DIVSTEP
+def divstep(update, context):
+    update.message.reply_text("divstep")
 
+    return telegram.ext.ConversationHandler.END
 # helper function, generates new numbers and sends the question
 def randomize_numbers(update_obj, context):
     # store the numbers in the context
@@ -84,7 +89,7 @@ yes_no_regex = re.compile(r'^(yes|no|y|n)$', re.IGNORECASE)
 handler = telegram.ext.ConversationHandler(
       entry_points=[telegram.ext.CommandHandler('start', start)],
       states={
-            WELCOME: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(yes_no_regex), welcome)],
+            DIVSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, divstep)],
             QUESTION: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(r'^\d+$'), question)],
             CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(yes_no_regex), cancel)],
             CORRECT: [telegram.ext.MessageHandler(telegram.ext.Filters.regex(yes_no_regex), correct)],
@@ -94,6 +99,8 @@ handler = telegram.ext.ConversationHandler(
 # add the handler to the dispatcher
 dispatcher.add_handler(handler)
 # start polling for updates from Telegram
-updater.start_polling()
-# block until a signal (like one sent by CTRL+C) is sent
+updater.start_webhook(listen="0.0.0.0",
+                        port=PORT,
+                        url_path=API_KEY,
+                        webhook_url="https://still-sierra-92948.herokuapp.com/" + API_KEY)
 updater.idle()
