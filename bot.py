@@ -33,7 +33,7 @@ def start(update, context:CallbackContext):
 
     return DIVSTEP
     
-def divStep(update, context:CallbackContext):
+def divstep(update, context:CallbackContext):
     update.message.reply_text("divstep")
 
     return COYSTEP
@@ -92,7 +92,7 @@ def main():
     start_conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
         states = {
-            DIVSTEP:  [MessageHandler(Filters.text, divStep)],
+            DIVSTEP:  [MessageHandler(Filters.text, divstep)],
             COYSTEP: [MessageHandler(Filters.text, coyStep)],
             WPNSTEP: [MessageHandler(Filters.text, wpnStep)],
             DEFECTSTEP: [MessageHandler(Filters.text, defectStep)],
