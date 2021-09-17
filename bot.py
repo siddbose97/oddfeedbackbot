@@ -30,14 +30,16 @@ dispatcher = updater.dispatcher
 
 BATSTEP, COYSTEP, WPNSTEP,BUTTSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(9)
 
-
+#=================================================================================================================
+#Google sheet API access set up
+#=================================================================================================================
 #set up google sheets API
-
 # Set scope to use when authenticating:
 scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/spreadsheets',
          'https://www.googleapis.com/auth/drive.file',
          'https://www.googleapis.com/auth/drive']
+
 # Authenticate using your credentials, saved in JSON in Step 1:
 jsonfile = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 creds = ServiceAccountCredentials.from_json_keyfile_name(jsonfile, scope)
@@ -46,7 +48,9 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(jsonfile, scope)
 client = gspread.authorize(creds)
 sheet = client.open('ODD Feedback').sheet1
 data = gspread_dataframe.get_as_dataframe(sheet)
-print(data)
+sheet.insert_rows(["dt", "coy", "wpn", "butt", "defPart", "def", "remarks"])
+#=================================================================================================================
+
 
 # The entry function
 def start(update_obj, context):
