@@ -7,6 +7,16 @@ import os
 from buttons import unitbuttons
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import logging
+import gspread_dataframe
+
+
+# Enable logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+)
+
+logger = logging.getLogger(__name__)
 
 # The API Key we received for our bot
 API_KEY = os.environ.get('TOKEN')
@@ -23,10 +33,20 @@ BATSTEP, COYSTEP, WPNSTEP,BUTTSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTE
 
 #set up google sheets API
 
+# Set scope to use when authenticating:
+scope = ['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/spreadsheets',
+         'https://www.googleapis.com/auth/drive.file',
+         'https://www.googleapis.com/auth/drive']
+# Authenticate using your credentials, saved in JSON in Step 1:
+jsonfile = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+creds = ServiceAccountCredentials.from_json_keyfile_name(jsonfile, scope)
 
-
-
-
+# authorize the clientsheet 
+client = gspread.authorize(creds)
+sheet = client.open('ODD Feedback').sheet1
+data = gspread_dataframe.get_as_dataframe(sheet)
+print(data)
 
 # The entry function
 def start(update_obj, context):
