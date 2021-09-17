@@ -48,7 +48,6 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(jsonfile, scope)
 client = gspread.authorize(creds)
 sheet = client.open('ODD Feedback').sheet1
 data = gspread_dataframe.get_as_dataframe(sheet)
-sheet.insert_rows(["dt", "coy", "wpn", "butt", "defPart", "def", "remarks"])
 #=================================================================================================================
 
 
@@ -104,7 +103,7 @@ def rmkchkStep(update_obj, context):
 
 def rmkstep(update_obj, context):
     update_obj.message.reply_text("rmkstep")
-
+    sheet.insert_rows(["dt", "coy", "wpn", "butt", "defPart", "def", "remarks"])
     return CANCEL
 
 
