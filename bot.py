@@ -81,7 +81,7 @@ def start(update_obj, context):
     list2 = [unitbuttons['Engineers'], unitbuttons['Commandos'], unitbuttons['Guards']]
     list3 = [unitbuttons['Infantry'], unitbuttons['Signals']]
     kb = telegram.ReplyKeyboardMarkup(keyboard=[list1, list2, list3],resize_keyboard = True, one_time_keyboard = True)
-    chat_id = update_obj.chat_id
+    chat_id = update_obj.message.chat_id
     oddDict[chat_id] = ODD(chat_id)
 
     update_obj.message.reply_text("Hello there, which unit are you from?",reply_markup=kb)
@@ -90,63 +90,63 @@ def start(update_obj, context):
 
 
 def batStep(update_obj, context):
-    chat_id = update_obj.chat_id
+    chat_id = update_obj.message.chat_id
 
     # sg=pytz.timezone('Asia/Singapore')
     # now = sg.localize(dt.datetime.now())
     # oddDict[chat_id].datetime = now
-    oddDict[chat_id].batstep = update_obj.message
+    oddDict[chat_id].batstep = update_obj.message.text
     update_obj.message.reply_text("batstep")
 
     return COYSTEP
 
 
 def coyStep(update_obj, context):
-    chat_id = update_obj.chat_id
-    oddDict[chat_id].coystep = update_obj.message
+    chat_id = update_obj.message.chat_id
+    oddDict[chat_id].coystep = update_obj.message.text
     update_obj.message.reply_text("coystep")
     
     return WPNSTEP
 
 def wpnStep(update_obj, context):
-    chat_id = update_obj.chat_id
-    oddDict[chat_id].wpnstep = update_obj.message
+    chat_id = update_obj.message.chat_id
+    oddDict[chat_id].wpnstep = update_obj.message.text
     update_obj.message.reply_text("wpnStep")
 
     return BUTTSTEP
 
 def buttStep(update_obj, context):
-    chat_id = update_obj.chat_id
-    oddDict[chat_id].buttstep = update_obj.message
+    chat_id = update_obj.message.chat_id
+    oddDict[chat_id].buttstep = update_obj.message.text
     update_obj.message.reply_text("buttStep")
 
     return DEFECTSTEP
 
 def defectStep(update_obj, context):
-    chat_id = update_obj.chat_id
-    oddDict[chat_id].defstep = update_obj.message
+    chat_id = update_obj.message.chat_id
+    oddDict[chat_id].defstep = update_obj.message.text
     update_obj.message.reply_text("defectStep")
 
     return DEFECTIDSTEP
 
 def defectIDStep(update_obj, context):
-    chat_id = update_obj.chat_id
-    oddDict[chat_id].defidstep = update_obj.message
+    chat_id = update_obj.message.chat_id
+    oddDict[chat_id].defidstep = update_obj.message.text
     update_obj.message.reply_text("defectIDStep")
 
     return RMKCHKSTEP
 
 def rmkchkStep(update_obj, context):
-    chat_id = update_obj.chat_id
-    oddDict[chat_id].rmkchkstep = update_obj.message
+    chat_id = update_obj.message.chat_id
+    oddDict[chat_id].rmkchkstep = update_obj.message.text
     update_obj.message.reply_text("rmkchkStep")
 
     return RMKSTEP
 
 def rmkstep(update_obj, context):
-    chat_id = update_obj.chat_id
+    chat_id = update_obj.message.chat_id
     odd = oddDict[chat_id]
-    odd.rmkstep = update_obj.message
+    odd.rmkstep = update_obj.message.text
     update_obj.message.reply_text("rmkstep")
     sheet.insert_row([odd.batstep, odd.coystep, odd.wpnstep, odd.buttstep, odd.defidstep, odd.defstep, odd.rmkchkstep, odd.rmkstep])
     return CANCEL
