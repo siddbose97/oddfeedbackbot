@@ -5,6 +5,8 @@ import re
 from random import randint
 import os
 from buttons import unitbuttons
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 # The API Key we received for our bot
 API_KEY = os.environ.get('TOKEN')
@@ -17,6 +19,12 @@ dispatcher = updater.dispatcher
 # Our states, as integers
 
 BATSTEP, COYSTEP, WPNSTEP,BUTTSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(9)
+
+
+#set up google sheets API
+
+
+
 
 
 
