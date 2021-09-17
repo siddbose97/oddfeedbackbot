@@ -148,7 +148,7 @@ def rmkstep(update_obj, context):
     odd = oddDict[chat_id]
     odd.rmkstep = update_obj.message.text
     update_obj.message.reply_text("rmkstep")
-    sheet.insert_row([odd.batstep, odd.coystep, odd.wpnstep, odd.buttstep, odd.defidstep, odd.defstep, odd.rmkchkstep, odd.rmkstep])
+    sheet.append_row([odd.batstep, odd.coystep, odd.wpnstep, odd.buttstep, odd.defidstep, odd.defstep, odd.rmkchkstep, odd.rmkstep])
     return CANCEL
 
 
