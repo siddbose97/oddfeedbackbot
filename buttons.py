@@ -8,5 +8,9 @@ unitbuttons = {
     'Guards':telegram.KeyboardButton(text='Guards'),
     'Infantry':telegram.KeyboardButton(text='Infantry'),
     'Signals':telegram.KeyboardButton(text='Signals')
-    
+}
+
+battalionButtons = {
+    'Armour': [[telegram.KeyboardButton(text='40SAR'),telegram.KeyboardButton(text='41SAR')]
+                [telegram.KeyboardButton(text='42SAR'),telegram.KeyboardButton(text='48SAR')]]
 }

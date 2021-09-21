@@ -4,7 +4,7 @@ import telegram.ext
 import re
 from random import randint
 import os
-from buttons import unitbuttons
+from buttons import unitbuttons, battalionButtons
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import logging
@@ -91,12 +91,18 @@ def start(update_obj, context):
 
 def batStep(update_obj, context):
     chat_id = update_obj.message.chat_id
+    msg = update_obj.message.text
+    sg=pytz.timezone('Asia/Singapore')
+    now = sg.localize(dt.datetime.now())
+    oddDict[chat_id].datetime = now
 
-    # sg=pytz.timezone('Asia/Singapore')
-    # now = sg.localize(dt.datetime.now())
-    # oddDict[chat_id].datetime = now
+
+
+    list1 = battalionButtons[msg]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+
     oddDict[chat_id].batstep = update_obj.message.text
-    update_obj.message.reply_text("batstep")
+    update_obj.message.reply_text(f"Which battalion in {msg} are you from?",reply_markup=kb)
 
     return COYSTEP
 
