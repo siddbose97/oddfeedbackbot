@@ -4,7 +4,7 @@ import telegram.ext
 import re
 from random import randint
 import os
-from buttons import unitbuttons, battalionButtons
+from buttons import unitbuttons, battalionButtons,companyButtons
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import logging
@@ -57,6 +57,8 @@ oddDict = {}
 class ODD:
     def __init__(self, chatID):
         self.chatID = chatID
+        self.unit = ""
+        self.battalion = ""        
         # self.datetime = ""
         # self.coy = ""
         # self.wpn = ""
@@ -92,9 +94,12 @@ def start(update_obj, context):
 def batStep(update_obj, context):
     chat_id = update_obj.message.chat_id
     msg = update_obj.message.text
+    odd = oddDict[chat_id]
     sg=pytz.timezone('Asia/Singapore')
     now = sg.localize(dt.datetime.now())
-    oddDict[chat_id].datetime = now
+    
+    odd.datetime = now
+    odd.unit = msg
 
 
 
@@ -109,9 +114,16 @@ def batStep(update_obj, context):
 
 def coyStep(update_obj, context):
     chat_id = update_obj.message.chat_id
-    oddDict[chat_id].coystep = update_obj.message.text
-    update_obj.message.reply_text("coystep")
+    msg = update_obj.message.text
+    odd = oddDict[chat_id]
+
+    odd.battalion = msg
     
+    list1 = companyButtons[odd.unit][odd.battalion]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+
+    oddDict[chat_id].batstep = update_obj.message.text
+    update_obj.message.reply_text(f"Which Company in {msg} are you from?",reply_markup=kb)
     return WPNSTEP
 
 def wpnStep(update_obj, context):
