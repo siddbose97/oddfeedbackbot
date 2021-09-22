@@ -127,7 +127,7 @@ def coyStep(update_obj, context):
 
     oddDict[chat_id].batstep = update_obj.message.text
     update_obj.message.reply_text(f"Which Company in {msg} are you from?",reply_markup=kb)
-    return WPNSTEP
+    return CANCEL
 
 def wpnStep(update_obj, context):
     chat_id = update_obj.message.chat_id
