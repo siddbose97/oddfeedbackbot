@@ -5,6 +5,7 @@ import re
 from random import randint
 import os
 from buttons import unitbuttons, battalionButtons,companyButtons
+from datastruct import mainDB
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import logging
@@ -59,10 +60,10 @@ class ODD:
         self.chatID = chatID
         self.unit = ""
         self.battalion = ""        
-        # self.datetime = ""
-        # self.coy = ""
-        # self.wpn = ""
-        # self.butt = 0
+        self.datetime = ""
+        self.coy = ""
+        self.wpn = ""
+        self.butt = 0
         # self.defPart = ""
         # self.defect = ""
         # self.rmk = ""
@@ -79,10 +80,12 @@ class ODD:
 # The entry function
 def start(update_obj, context):
     # send the question, and show the keyboard markup (suggested answers)
-    list1 = [unitbuttons['Armour'], unitbuttons['Artillery']]
-    list2 = [unitbuttons['Engineers'], unitbuttons['Commandos'], unitbuttons['Guards']]
-    list3 = [unitbuttons['Infantry'], unitbuttons['Signals']]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1, list2, list3],resize_keyboard = True, one_time_keyboard = True)
+    # list1 = [unitbuttons['Armour'], unitbuttons['Artillery']]
+    # list2 = [unitbuttons['Engineers'], unitbuttons['Commandos'], unitbuttons['Guards']]
+    # list3 = [unitbuttons['Infantry'], unitbuttons['Signals']]
+
+    list1 = [[telegram.KeyboardButton(text=unit)] for unit in list(mainDB.keys())]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1],resize_keyboard = True, one_time_keyboard = True)
     chat_id = update_obj.message.chat_id
     oddDict[chat_id] = ODD(chat_id)
 
@@ -101,12 +104,9 @@ def batStep(update_obj, context):
     odd.datetime = now
     odd.unit = msg
 
+    list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit].keys())]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1],resize_keyboard = True, one_time_keyboard = True)
 
-
-    list1 = battalionButtons[msg]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
-
-    oddDict[chat_id].batstep = update_obj.message.text
     update_obj.message.reply_text(f"Which battalion in {msg} are you from?",reply_markup=kb)
 
     return COYSTEP
@@ -119,29 +119,44 @@ def coyStep(update_obj, context):
 
     odd.battalion = msg
     
-    #list1 = companyButtons[odd.unit][odd.battalion]
-    l = ["HQ", "Support", "Alpha", "Bravo", "Charlie", "Delta", "E", "F"]
+    list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit][odd.battalion].keys())]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1],resize_keyboard = True, one_time_keyboard = True)
 
-    list1 = [[telegram.KeyboardButton(text=val)] for val in l]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
-
-    oddDict[chat_id].batstep = update_obj.message.text
     update_obj.message.reply_text(f"Which Company in {msg} are you from?",reply_markup=kb)
-    return CANCEL
+    #return CANCEL
+    return WPNSTEP
 
 def wpnStep(update_obj, context):
     chat_id = update_obj.message.chat_id
-    oddDict[chat_id].wpnstep = update_obj.message.text
-    update_obj.message.reply_text("wpnStep")
+    msg = update_obj.message.text
+    odd = oddDict[chat_id]
+    odd.coy = msg
+
+    list1 = [[telegram.KeyboardButton(text=weapon)] for weapon in mainDB[odd.unit][odd.battalion][odd.coy]]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1],resize_keyboard = True, one_time_keyboard = True)
+
+    
+    update_obj.message.reply_text("Which Weapon has a defect?",reply_markup=kb)
 
     return BUTTSTEP
 
 def buttStep(update_obj, context):
     chat_id = update_obj.message.chat_id
-    oddDict[chat_id].buttstep = update_obj.message.text
-    update_obj.message.reply_text("buttStep")
+    msg = update_obj.message.text
+    odd = oddDict[chat_id]
+    odd.wpn = msg
 
-    return DEFECTSTEP
+    list1 = [
+    ['7', '8', '9'],
+    ['4', '5', '6'],
+    ['1', '2', '3'],
+         ['0']]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+
+    
+    update_obj.message.reply_text("What is the weapon's butt number?",reply_markup=kb)
+    
+    return CANCEL
 
 def defectStep(update_obj, context):
     chat_id = update_obj.message.chat_id
