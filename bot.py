@@ -105,7 +105,7 @@ def batStep(update_obj, context):
     odd.unit = msg
 
     list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit].keys())]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1],resize_keyboard = True, one_time_keyboard = True)
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
     update_obj.message.reply_text(f"Which battalion in {msg} are you from?",reply_markup=kb)
 
@@ -120,7 +120,7 @@ def coyStep(update_obj, context):
     odd.battalion = msg
     
     list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit][odd.battalion].keys())]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1],resize_keyboard = True, one_time_keyboard = True)
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
     update_obj.message.reply_text(f"Which Company in {msg} are you from?",reply_markup=kb)
     #return CANCEL
@@ -133,7 +133,7 @@ def wpnStep(update_obj, context):
     odd.coy = msg
 
     list1 = [[telegram.KeyboardButton(text=weapon)] for weapon in mainDB[odd.unit][odd.battalion][odd.coy]]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1],resize_keyboard = True, one_time_keyboard = True)
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
     
     update_obj.message.reply_text("Which Weapon has a defect?",reply_markup=kb)
