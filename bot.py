@@ -120,7 +120,7 @@ def coyStep(update_obj, context):
     odd.battalion = msg
     
     #list1 = companyButtons[odd.unit][odd.battalion]
-    l = ["HQ", "Support", "Alpha", "Bravo", "Charlie"]
+    l = ["HQ", "Support", "Alpha", "Bravo", "Charlie", "Delta", "E", "F"]
 
     list1 = [[telegram.KeyboardButton(text=val)] for val in l]
     kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
