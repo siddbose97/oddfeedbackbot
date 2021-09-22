@@ -85,7 +85,7 @@ def start(update_obj, context):
     # list3 = [unitbuttons['Infantry'], unitbuttons['Signals']]
 
     list1 = [[telegram.KeyboardButton(text=unit)] for unit in list(mainDB.keys())]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=[list1],resize_keyboard = True, one_time_keyboard = True)
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
     chat_id = update_obj.message.chat_id
     oddDict[chat_id] = ODD(chat_id)
 
