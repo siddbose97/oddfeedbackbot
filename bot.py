@@ -119,7 +119,10 @@ def coyStep(update_obj, context):
 
     odd.battalion = msg
     
-    list1 = companyButtons[odd.unit][odd.battalion]
+    #list1 = companyButtons[odd.unit][odd.battalion]
+    l = ["HQ", "Support", "Alpha", "Bravo", "Charlie"]
+
+    list1 = [[telegram.KeyboardButton(text=val)] for val in l]
     kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
     oddDict[chat_id].batstep = update_obj.message.text
@@ -166,7 +169,7 @@ def rmkstep(update_obj, context):
     odd = oddDict[chat_id]
     odd.rmkstep = update_obj.message.text
     update_obj.message.reply_text("rmkstep")
-    sheet.append_row([odd.batstep, odd.coystep, odd.wpnstep, odd.buttstep, odd.defidstep, odd.defstep, odd.rmkchkstep, odd.rmkstep])
+    #sheet.append_row([odd.batstep, odd.coystep, odd.wpnstep, odd.buttstep, odd.defidstep, odd.defstep, odd.rmkchkstep, odd.rmkstep])
     return CANCEL
 
 
