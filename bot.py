@@ -83,15 +83,17 @@ def start(update_obj, context):
     # list1 = [unitbuttons['Armour'], unitbuttons['Artillery']]
     # list2 = [unitbuttons['Engineers'], unitbuttons['Commandos'], unitbuttons['Guards']]
     # list3 = [unitbuttons['Infantry'], unitbuttons['Signals']]
+    try:
+        list1 = [[telegram.KeyboardButton(text=unit)] for unit in list(mainDB.keys())]
+        kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+        chat_id = update_obj.message.chat_id
+        oddDict[chat_id] = ODD(chat_id)
 
-    list1 = [[telegram.KeyboardButton(text=unit)] for unit in list(mainDB.keys())]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
-    chat_id = update_obj.message.chat_id
-    oddDict[chat_id] = ODD(chat_id)
-
-    update_obj.message.reply_text("Hello there, which unit are you from?",reply_markup=kb)
+        update_obj.message.reply_text("Hello there, which unit are you from?",reply_markup=kb)
     # go to the Batallion state
-    return BATSTEP
+        return BATSTEP
+    except Exception as e:
+        cancel(e, context)
 
 
 def batStep(update_obj, context):
