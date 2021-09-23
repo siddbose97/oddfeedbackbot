@@ -97,21 +97,25 @@ def start(update_obj, context):
 
 
 def batStep(update_obj, context):
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
-    sg=pytz.timezone('Asia/Singapore')
-    now = sg.localize(dt.datetime.now())
+    try:
+        chat_id = update_obj.message.chat_id
+        msg = update_obj.message.text
+        odd = oddDict[chat_id]
+        sg=pytz.timezone('Asia/Singapore')
+        now = sg.localize(dt.datetime.now())
+        
+        odd.datetime = now
+        odd.unit = msg
+
+        list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit].keys())]
+        kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+
+        update_obj.message.reply_text(f"Which battalion in {msg} are you from?",reply_markup=kb)
+        return COYSTEP
+    except Exception as e:
+        cancel(e, context)
+
     
-    odd.datetime = now
-    odd.unit = msg
-
-    list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit].keys())]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
-
-    update_obj.message.reply_text(f"Which battalion in {msg} are you from?",reply_markup=kb)
-
-    return COYSTEP
 
 
 def coyStep(update_obj, context):
