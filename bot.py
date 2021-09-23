@@ -115,7 +115,7 @@ def batStep(update_obj, context):
         update_obj.message.reply_text(f"Which battalion in {msg} are you from?",reply_markup=kb)
         return COYSTEP
     except Exception as e:
-        cancel(e, context)
+        cancel(update_obj, context)
 
     
 
