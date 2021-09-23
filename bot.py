@@ -222,7 +222,7 @@ def main():
     handler = telegram.ext.ConversationHandler(
         entry_points=[telegram.ext.CommandHandler('start', start)],
         states={
-                BATSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text(), batStep)],
+                BATSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, batStep)],
                 COYSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
                 WPNSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, wpnStep)],
                 BUTTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, buttStep)],
