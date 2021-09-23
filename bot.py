@@ -107,6 +107,8 @@ def batStep(update_obj, context):
         odd.datetime = now
         odd.unit = msg
 
+        if not msg in mainDB.keys():
+            raise Exception
         list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit].keys())]
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
@@ -220,7 +222,7 @@ def main():
     handler = telegram.ext.ConversationHandler(
         entry_points=[telegram.ext.CommandHandler('start', start)],
         states={
-                BATSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text(unitbuttons.keys()), batStep)],
+                BATSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text(), batStep)],
                 COYSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
                 WPNSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, wpnStep)],
                 BUTTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, buttStep)],
