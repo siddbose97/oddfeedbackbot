@@ -146,22 +146,22 @@ def buttStep(update_obj, context):
     odd = oddDict[chat_id]
     odd.wpn = msg
 
-    list1 = [
-    ['7', '8', '9'],
-    ['4', '5', '6'],
-    ['1', '2', '3'],
-         ['0']]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+    # list1 = [
+    # ['7', '8', '9'],
+    # ['4', '5', '6'],
+    # ['1', '2', '3'],
+    #      ['0']]
+    # kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
     
-    update_obj.message.reply_text("What is the weapon's butt number?",reply_markup=kb)
+    update_obj.message.reply_text("What is the weapon's butt number?")
     
-    return CANCEL
+    return CANCEL 
 
 def defectStep(update_obj, context):
     chat_id = update_obj.message.chat_id
     oddDict[chat_id].defstep = update_obj.message.text
-    update_obj.message.reply_text("defectStep")
+    update_obj.message.reply_text("defectStep") 
 
     return DEFECTIDSTEP
 
