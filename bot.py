@@ -6,6 +6,7 @@ from random import randint
 import os
 from buttons import unitbuttons, battalionButtons,companyButtons
 from datastruct import mainDB
+from weapons import weaponDefects
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import logging
@@ -31,7 +32,7 @@ updater = telegram.ext.Updater(API_KEY)
 dispatcher = updater.dispatcher
 # Our states, as integers
 
-BATSTEP, COYSTEP, WPNSTEP,BUTTSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, RMKSTEP, CANCEL = range(9)
+BATSTEP, COYSTEP, WPNSTEP,BUTTSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, YESORNO, RMKSTEP, END, CANCEL = range(11)
 
 #=================================================================================================================
 #Google sheet API access set up
@@ -64,17 +65,10 @@ class ODD:
         self.coy = ""
         self.wpn = ""
         self.butt = 0
-        # self.defPart = ""
-        # self.defect = ""
-        # self.rmk = ""
-        self.batstep = ""
-        self.coystep = ""
-        self.wpnstep = ""
-        self.buttstep = ""
-        self.defidstep = ""
-        self.defstep = ""
-        self.rmkchkstep = ""
-        self.rmkstep = ""
+        self.defPart = ""
+        self.defect = ""
+        self.rmk = "N/A"
+       
 
 
 # The entry function
@@ -164,41 +158,86 @@ def buttStep(update_obj, context):
     
     update_obj.message.reply_text("What is the weapon's butt number?")
     
-    return CANCEL 
+    return DEFECTSTEP 
 
 def defectStep(update_obj, context):
     chat_id = update_obj.message.chat_id
-    oddDict[chat_id].defstep = update_obj.message.text
-    update_obj.message.reply_text("defectStep") 
+    msg = update_obj.message.text
+    odd = oddDict[chat_id]
+    odd.butt = msg
+
+    list1 = [[telegram.KeyboardButton(text=weapon_part)] for weapon_part in list(weaponDefects[odd.wpn].keys())]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+
+    
+    update_obj.message.reply_text("What part has the defect?",reply_markup=kb)
 
     return DEFECTIDSTEP
 
 def defectIDStep(update_obj, context):
     chat_id = update_obj.message.chat_id
-    oddDict[chat_id].defidstep = update_obj.message.text
-    update_obj.message.reply_text("defectIDStep")
+    msg = update_obj.message.text
+    odd = oddDict[chat_id]
+    odd.defPart = msg
+
+    list1 = [[telegram.KeyboardButton(text=defect)] for defect in list(weaponDefects[odd.wpn][odd.defPart].values())]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+
+    
+    update_obj.message.reply_text("What is the actual defect?",reply_markup=kb)
 
     return RMKCHKSTEP
 
 def rmkchkStep(update_obj, context):
     chat_id = update_obj.message.chat_id
-    oddDict[chat_id].rmkchkstep = update_obj.message.text
-    update_obj.message.reply_text("rmkchkStep")
+    msg = update_obj.message.text
+    odd = oddDict[chat_id]
+    odd.defect = msg
 
-    return RMKSTEP
+    list1 = [[telegram.KeyboardButton(text='Yes')],[telegram.KeyboardButton(text='No')] ]
+    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+
+    
+    update_obj.message.reply_text("Do you have further remarks?",reply_markup=kb)
+
+    return YESORNO
+
+def check_yes_or_no(update_obj, context):
+    chat_id = update_obj.message.chat_id
+    msg = update_obj.message.text
+    odd = oddDict[chat_id]
+    
+    if msg == 'Yes':
+        update_obj.message.reply_text("Enter remarks below")
+        return RMKSTEP
+    elif msg == 'No':
+        return END
 
 def rmkstep(update_obj, context):
     chat_id = update_obj.message.chat_id
+    msg = update_obj.message.text
     odd = oddDict[chat_id]
-    odd.rmkstep = update_obj.message.text
-    update_obj.message.reply_text("rmkstep")
-    #sheet.append_row([odd.batstep, odd.coystep, odd.wpnstep, odd.buttstep, odd.defidstep, odd.defstep, odd.rmkchkstep, odd.rmkstep])
-    return CANCEL 
+    odd.rmk = msg
+
+    return END 
 
 
 
 
+def end(update_obj, context):
 
+    chat_id = update_obj.message.chat_id
+    msg = update_obj.message.text
+    odd = oddDict[chat_id]
+
+    sheet.append_row([odd.datetime, f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
+
+    # get the user's first name
+    first_name = update_obj.message.from_user['first_name']
+    update_obj.message.reply_text(
+        f"Thank you {first_name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
+    )
+    return telegram.ext.ConversationHandler.END
 
 
 
@@ -229,7 +268,9 @@ def main():
                 DEFECTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, defectStep)],
                 DEFECTIDSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, defectIDStep)],
                 RMKCHKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, rmkchkStep)],
+                YESORNO: [telegram.ext.MessageHandler(telegram.ext.Filters.text, check_yes_or_no)],
                 RMKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, rmkstep)],
+                END: [telegram.ext.MessageHandler(telegram.ext.Filters.text, end)],
                 CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)]
         },
         fallbacks=[telegram.ext.CommandHandler('cancel', cancel)],
