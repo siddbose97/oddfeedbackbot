@@ -209,17 +209,14 @@ def check_yes_or_no(update_obj, context):
     
     if msg == 'Yes':
         update_obj.message.reply_text("Enter remarks below")
-        return RMKSTEP
-    elif msg == 'No':
         return END
-
-def rmkstep(update_obj, context):
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
-    odd.rmk = msg
-
-    return END 
+    elif msg == 'No':
+        first_name = update_obj.message.from_user['first_name']
+        update_obj.message.reply_text(
+        f"Thank you {first_name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
+        )
+        sheet.append_row([str(odd.datetime), f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
+        return telegram.ext.ConversationHandler.END
 
 
 
@@ -229,8 +226,9 @@ def end(update_obj, context):
     chat_id = update_obj.message.chat_id
     msg = update_obj.message.text
     odd = oddDict[chat_id]
+    odd.rmk = msg
 
-    sheet.append_row([odd.datetime, f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
+    sheet.append_row([str(odd.datetime), f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
 
     # get the user's first name
     first_name = update_obj.message.from_user['first_name']
@@ -269,7 +267,6 @@ def main():
                 DEFECTIDSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, defectIDStep)],
                 RMKCHKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, rmkchkStep)],
                 YESORNO: [telegram.ext.MessageHandler(telegram.ext.Filters.text, check_yes_or_no)],
-                RMKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, rmkstep)],
                 END: [telegram.ext.MessageHandler(telegram.ext.Filters.text, end)],
                 CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)]
         },
