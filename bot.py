@@ -110,7 +110,7 @@ def batStep(update_obj, context):
         return COYSTEP
     except Exception as e:
         cancel(update_obj, context)
-
+        return telegram.ext.ConversationHandler.END
     
 
 
@@ -251,9 +251,6 @@ def cancel(update_obj, context):
 
 
 def main():
-    # a regular expression that matches yes or no
-    yes_no_regex = re.compile(r'^(yes|no|y|n)$', re.IGNORECASE)
-    # Create our ConversationHandler, with only one state
 
 
     handler = telegram.ext.ConversationHandler(
@@ -274,6 +271,8 @@ def main():
         )
     # add the handler to the dispatcher
     dispatcher.add_handler(handler)
+    dispatcher.add_handler(telegram.ext.MessageHandler(telegram.ext.Filters.text | ~telegram.ext.Filters.text, cancel))
+
     # start polling for updates from Telegram
     updater.start_webhook(listen="0.0.0.0",
                             port=PORT,
