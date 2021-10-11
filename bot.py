@@ -5,7 +5,7 @@ import re
 from random import randint
 import os
 from buttons import unitbuttons, battalionButtons,companyButtons
-from datastruct import mainDB
+from armskote import mainDB
 from weapons import weaponDefects
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -73,10 +73,7 @@ class ODD:
 
 # The entry function
 def start(update_obj, context):
-    # send the question, and show the keyboard markup (suggested answers)
-    # list1 = [unitbuttons['Armour'], unitbuttons['Artillery']]
-    # list2 = [unitbuttons['Engineers'], unitbuttons['Commandos'], unitbuttons['Guards']]
-    # list3 = [unitbuttons['Infantry'], unitbuttons['Signals']]
+  
     try:
         list1 = [[telegram.KeyboardButton(text=unit)] for unit in list(mainDB.keys())]
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
@@ -115,127 +112,155 @@ def batStep(update_obj, context):
 
 
 def coyStep(update_obj, context):
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
+    try:
+        chat_id = update_obj.message.chat_id
+        msg = update_obj.message.text
+        odd = oddDict[chat_id]
 
-    odd.battalion = msg
-    
-    list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit][odd.battalion].keys())]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+        odd.battalion = msg
+        
+        list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit][odd.battalion].keys())]
+        kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
-    update_obj.message.reply_text(f"Which Company in {msg} are you from?",reply_markup=kb)
-    #return CANCEL
-    return WPNSTEP
+        update_obj.message.reply_text(f"Which Company in {msg} are you from?",reply_markup=kb)
+        #return CANCEL
+        return WPNSTEP  
+    except Exception as e:
+        cancel(update_obj, context)
+        return telegram.ext.ConversationHandler.END
 
 def wpnStep(update_obj, context):
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
-    odd.coy = msg
+    try: 
+        chat_id = update_obj.message.chat_id
+        msg = update_obj.message.text
+        odd = oddDict[chat_id]
+        odd.coy = msg
 
-    list1 = [[telegram.KeyboardButton(text=weapon)] for weapon in mainDB[odd.unit][odd.battalion][odd.coy]]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+        list1 = [[telegram.KeyboardButton(text=weapon)] for weapon in mainDB[odd.unit][odd.battalion][odd.coy]]
+        kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
-    
-    update_obj.message.reply_text("Which Weapon has a defect?",reply_markup=kb)
+        
+        update_obj.message.reply_text("Which Weapon has a defect?",reply_markup=kb)
+        return BUTTSTEP
 
-    return BUTTSTEP
+    except Exception as e:
+        cancel(update_obj, context)
+        return telegram.ext.ConversationHandler.END
+
 
 def buttStep(update_obj, context):
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
-    odd.wpn = msg
-
-    # list1 = [
-    # ['7', '8', '9'],
-    # ['4', '5', '6'],
-    # ['1', '2', '3'],
-    #      ['0']]
-    # kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
-
-    
-    update_obj.message.reply_text("What is the weapon's butt number?")
-    
-    return DEFECTSTEP 
+    try:
+        chat_id = update_obj.message.chat_id
+        msg = update_obj.message.text
+        odd = oddDict[chat_id]
+        odd.wpn = msg    
+        update_obj.message.reply_text("What is the weapon's butt number?")
+        
+        return DEFECTSTEP 
+    except Exception as e:        
+        cancel(update_obj, context)
+        return telegram.ext.ConversationHandler.END
 
 def defectStep(update_obj, context):
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
-    odd.butt = msg
+    try:
+        chat_id = update_obj.message.chat_id
+        msg = update_obj.message.text
+        odd = oddDict[chat_id]
+        odd.butt = msg
 
-    list1 = [[telegram.KeyboardButton(text=weapon_part)] for weapon_part in list(weaponDefects[odd.wpn].keys())]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+        list1 = [[telegram.KeyboardButton(text=weapon_part)] for weapon_part in list(weaponDefects[odd.wpn].keys())]
+        kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
-    
-    update_obj.message.reply_text("What part has the defect?",reply_markup=kb)
+        
+        update_obj.message.reply_text("What part has the defect?",reply_markup=kb)
 
-    return DEFECTIDSTEP
+        return DEFECTIDSTEP
+    except Exception as e:        
+        cancel(update_obj, context)
+        return telegram.ext.ConversationHandler.END
 
 def defectIDStep(update_obj, context):
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
-    odd.defPart = msg
+    try:
+        chat_id = update_obj.message.chat_id
+        msg = update_obj.message.text
+        odd = oddDict[chat_id]
+        odd.defPart = msg
 
-    list1 = [[telegram.KeyboardButton(text=defect)] for defect in list(weaponDefects[odd.wpn][odd.defPart].values())]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+        if odd.defPart == 'OTHER':
+            update_obj.message.reply_text("Please explain as best as possible what the issue is")
+            return END
+        else:
+            list1 = [[telegram.KeyboardButton(text=defect)] for defect in list(weaponDefects[odd.wpn][odd.defPart].values())]
+            kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
-    
-    update_obj.message.reply_text("What is the actual defect?",reply_markup=kb)
-
-    return RMKCHKSTEP
+            
+            update_obj.message.reply_text("What is the actual defect?",reply_markup=kb)
+            return RMKCHKSTEP
+    except Exception as e:        
+        cancel(update_obj, context)
+        return telegram.ext.ConversationHandler.END
 
 def rmkchkStep(update_obj, context):
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
-    odd.defect = msg
+    try:
+        chat_id = update_obj.message.chat_id
+        msg = update_obj.message.text
+        odd = oddDict[chat_id]
+        odd.defect = msg
 
-    list1 = [[telegram.KeyboardButton(text='Yes')],[telegram.KeyboardButton(text='No')] ]
-    kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+        list1 = [[telegram.KeyboardButton(text='Yes')],[telegram.KeyboardButton(text='No')] ]
+        kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
-    
-    update_obj.message.reply_text("Do you have further remarks?",reply_markup=kb)
+        
+        update_obj.message.reply_text("Do you have further remarks?",reply_markup=kb)
+        return YESORNO
 
-    return YESORNO
+    except Exception as e:        
+        cancel(update_obj, context)
+        return telegram.ext.ConversationHandler.END
+
 
 def check_yes_or_no(update_obj, context):
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
-    
-    if msg == 'Yes':
-        update_obj.message.reply_text("Enter remarks below")
-        return END
-    elif msg == 'No':
-        first_name = update_obj.message.from_user['first_name']
-        update_obj.message.reply_text(
-        f"Thank you {first_name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
-        )
-        sheet.append_row([str(odd.datetime), f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
+    try:
+        chat_id = update_obj.message.chat_id
+        msg = update_obj.message.text
+        odd = oddDict[chat_id]
+        
+        if msg == 'Yes':
+            update_obj.message.reply_text("Enter remarks below")
+            return END
+        elif msg == 'No':
+            first_name = update_obj.message.from_user['first_name']
+            update_obj.message.reply_text(
+            f"Thank you {first_name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
+            )
+            sheet.append_row([str(odd.datetime), f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
+            return telegram.ext.ConversationHandler.END
+    except Exception as e:        
+        cancel(update_obj, context)
         return telegram.ext.ConversationHandler.END
 
 
 
 
 def end(update_obj, context):
+    try:
+        chat_id = update_obj.message.chat_id
+        msg = update_obj.message.text
+        odd = oddDict[chat_id]
+        odd.rmk = msg
 
-    chat_id = update_obj.message.chat_id
-    msg = update_obj.message.text
-    odd = oddDict[chat_id]
-    odd.rmk = msg
+        sheet.append_row([str(odd.datetime), f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
 
-    sheet.append_row([str(odd.datetime), f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
-
-    # get the user's first name
-    first_name = update_obj.message.from_user['first_name']
-    update_obj.message.reply_text(
-        f"Thank you {first_name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
-    )
-    return telegram.ext.ConversationHandler.END
+        # get the user's first name
+        first_name = update_obj.message.from_user['first_name']
+        update_obj.message.reply_text(
+            f"Thank you {first_name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
+        )
+        return telegram.ext.ConversationHandler.END
+    except Exception as e:        
+        cancel(update_obj, context)
+        return telegram.ext.ConversationHandler.END 
+    
 
 
 
