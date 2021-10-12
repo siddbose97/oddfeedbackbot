@@ -191,7 +191,7 @@ def buttStep(update_obj, context):
         odd.wpn = msg
         if msg == "QUIT":
             return cancel(update_obj, context)    
-        list1 = [telegram.KeyboardButton(text='QUIT')]
+        list1 = [[telegram.KeyboardButton(text='QUIT')]]
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
         update_obj.message.reply_text("Enter the Weapon's butt number or click QUIT to end" ,reply_markup=kb)
         
@@ -272,7 +272,8 @@ def check_yes_or_no(update_obj, context):
         if msg == "QUIT":
             return cancel(update_obj, context)  
         if msg == 'Yes':
-            list1 = [telegram.KeyboardButton(text='QUIT')]
+            list1 = [[telegram.KeyboardButton(text='QUIT')]]
+
             kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
             update_obj.message.reply_text("Enter remarks below or click QUIT to end",  reply_markup=kb)
             return END
