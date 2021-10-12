@@ -68,14 +68,39 @@ class ODD:
         self.defPart = ""
         self.defect = ""
         self.rmk = "N/A"
+#=================================================================================================================
        
+def help(update_obj, context):
+    try:
+        help_string = """
+Welcome to the ODD Feedback Bot! Here you can report 
+your ODDs without spending time waiting for the
+notebook to be passed around!
 
+/start will start the bot and will lead you through
+a series of questions to easily report the required
+information
+
+If you are having any issues or suggestions please 
+contact 62FMD at 6AMB
+
+        
+        """
+
+        update_obj.message.reply_text(help_string)
+        return telegram.ext.ConversationHandler.END
+
+    except Exception as e:
+        cancel(e, context)
+        return telegram.ext.ConversationHandler.END
+#=================================================================================================================
 
 # The entry function
 def start(update_obj, context):
   
     try:
         list1 = [[telegram.KeyboardButton(text=unit)] for unit in list(mainDB.keys())]
+        list1.append([telegram.KeyboardButton(text='QUIT')])
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
         chat_id = update_obj.message.chat_id
         oddDict[chat_id] = ODD(chat_id)
@@ -98,9 +123,14 @@ def batStep(update_obj, context):
         odd.datetime = now
         odd.unit = msg
 
+        if msg == "QUIT":
+            return cancel(update_obj, context)
+
         if not msg in mainDB.keys():
             raise Exception
         list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit].keys())]
+        list1.append([telegram.KeyboardButton(text='QUIT')])
+
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
         update_obj.message.reply_text(f"Which battalion in {msg} are you from?",reply_markup=kb)
@@ -118,8 +148,10 @@ def coyStep(update_obj, context):
         odd = oddDict[chat_id]
 
         odd.battalion = msg
-        
+        if msg == "QUIT":
+            return cancel(update_obj, context)
         list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit][odd.battalion].keys())]
+        list1.append([telegram.KeyboardButton(text='QUIT')])
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
         update_obj.message.reply_text(f"Which Company in {msg} are you from?",reply_markup=kb)
@@ -135,8 +167,11 @@ def wpnStep(update_obj, context):
         msg = update_obj.message.text
         odd = oddDict[chat_id]
         odd.coy = msg
+        if msg == "QUIT":
+            return cancel(update_obj, context)
 
         list1 = [[telegram.KeyboardButton(text=weapon)] for weapon in mainDB[odd.unit][odd.battalion][odd.coy]]
+        list1.append([telegram.KeyboardButton(text='QUIT')])
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
         
@@ -153,8 +188,12 @@ def buttStep(update_obj, context):
         chat_id = update_obj.message.chat_id
         msg = update_obj.message.text
         odd = oddDict[chat_id]
-        odd.wpn = msg    
-        update_obj.message.reply_text("What is the weapon's butt number?")
+        odd.wpn = msg
+        if msg == "QUIT":
+            return cancel(update_obj, context)    
+        list1 = [telegram.KeyboardButton(text='QUIT')]
+        kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+        update_obj.message.reply_text("Enter the Weapon's butt number or click QUIT to end" ,reply_markup=kb)
         
         return DEFECTSTEP 
     except Exception as e:        
@@ -167,8 +206,10 @@ def defectStep(update_obj, context):
         msg = update_obj.message.text
         odd = oddDict[chat_id]
         odd.butt = msg
-
+        if msg == "QUIT":
+            return cancel(update_obj, context)  
         list1 = [[telegram.KeyboardButton(text=weapon_part)] for weapon_part in list(weaponDefects[odd.wpn].keys())]
+        list1.append([telegram.KeyboardButton(text='QUIT')])
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
         
@@ -185,12 +226,15 @@ def defectIDStep(update_obj, context):
         msg = update_obj.message.text
         odd = oddDict[chat_id]
         odd.defPart = msg
-
+        if msg == "QUIT":
+            return cancel(update_obj, context)  
         if odd.defPart == 'OTHER':
             update_obj.message.reply_text("Please explain as best as possible what the issue is")
             return END
         else:
             list1 = [[telegram.KeyboardButton(text=defect)] for defect in list(weaponDefects[odd.wpn][odd.defPart].values())]
+            list1.append([telegram.KeyboardButton(text='QUIT')])
+
             kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
             
@@ -206,8 +250,9 @@ def rmkchkStep(update_obj, context):
         msg = update_obj.message.text
         odd = oddDict[chat_id]
         odd.defect = msg
-
-        list1 = [[telegram.KeyboardButton(text='Yes')],[telegram.KeyboardButton(text='No')] ]
+        if msg == "QUIT":
+            return cancel(update_obj, context)  
+        list1 = [[telegram.KeyboardButton(text='Yes'), telegram.KeyboardButton(text='No')],[telegram.KeyboardButton(text='QUIT')]]
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
         
@@ -224,9 +269,12 @@ def check_yes_or_no(update_obj, context):
         chat_id = update_obj.message.chat_id
         msg = update_obj.message.text
         odd = oddDict[chat_id]
-        
+        if msg == "QUIT":
+            return cancel(update_obj, context)  
         if msg == 'Yes':
-            update_obj.message.reply_text("Enter remarks below")
+            list1 = [telegram.KeyboardButton(text='QUIT')]
+            kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+            update_obj.message.reply_text("Enter remarks below or click QUIT to end",  reply_markup=kb)
             return END
         elif msg == 'No':
             first_name = update_obj.message.from_user['first_name']
@@ -248,13 +296,14 @@ def end(update_obj, context):
         msg = update_obj.message.text
         odd = oddDict[chat_id]
         odd.rmk = msg
-
+        if msg == "QUIT":
+            return cancel(update_obj, context)  
         sheet.append_row([str(odd.datetime), f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
 
         # get the user's first name
         first_name = update_obj.message.from_user['first_name']
         update_obj.message.reply_text(
-            f"Thank you {first_name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
+            f"Thank you {first_name} for your report! Click /start to start again", reply_markup=telegram.ReplyKeyboardRemove()
         )
         return telegram.ext.ConversationHandler.END
     except Exception as e:        
@@ -269,17 +318,24 @@ def cancel(update_obj, context):
     # get the user's first name
     first_name = update_obj.message.from_user['first_name']
     update_obj.message.reply_text(
-        f"Okay, no question for you then, take care, {first_name}!", reply_markup=telegram.ReplyKeyboardRemove()
-    )
+        f"Okay, no question for you then, take care, {first_name}! Please click /start to start again",\
+             reply_markup=telegram.ReplyKeyboardRemove())
     return telegram.ext.ConversationHandler.END
 
+def outside_of_handler(update_obj, context):
+    # get the user's first name
+    first_name = update_obj.message.from_user['first_name']
+    update_obj.message.reply_text(
+        f"Hi {first_name}! Please click /start to start the bot or click /help to learn more",\
+             reply_markup=telegram.ReplyKeyboardRemove())
+    return telegram.ext.ConversationHandler.END
 
 
 def main():
 
 
     handler = telegram.ext.ConversationHandler(
-        entry_points=[telegram.ext.CommandHandler('start', start)],
+        entry_points=[telegram.ext.CommandHandler('start', start),telegram.ext.CommandHandler('help', help)],
         states={
                 BATSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, batStep)],
                 COYSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
@@ -296,7 +352,7 @@ def main():
         )
     # add the handler to the dispatcher
     dispatcher.add_handler(handler)
-    dispatcher.add_handler(telegram.ext.MessageHandler(telegram.ext.Filters.text | ~telegram.ext.Filters.text, cancel))
+    dispatcher.add_handler(telegram.ext.MessageHandler(telegram.ext.Filters.text | ~telegram.ext.Filters.text, outside_of_handler))
 
     # start polling for updates from Telegram
     updater.start_webhook(listen="0.0.0.0",
