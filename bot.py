@@ -280,7 +280,7 @@ def check_yes_or_no(update_obj, context):
             return END
         elif msg == 'No':
             update_obj.message.reply_text(
-            f"Thank you {odd.name.split()[0]} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
+            f"Thank you {odd.name.split()[0]} for your report! Please click /start to restart the bot", reply_markup=telegram.ReplyKeyboardRemove()
             )
             sheet.append_row([str(odd.datetime),odd.name, f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
             return ConversationHandler.END
