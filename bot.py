@@ -1,10 +1,7 @@
 import telegram
-import telebot
 import telegram.ext
-import re
-from random import randint
+from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHandler, Filters
 import os
-from buttons import unitbuttons, battalionButtons,companyButtons
 from armskote import mainDB
 from weapons import weaponDefects
 import gspread
@@ -27,7 +24,7 @@ API_KEY = os.environ.get('TOKEN')
 PORT = int(os.environ.get('PORT', 8443))
 
 # Create an updater object with our API Key
-updater = telegram.ext.Updater(API_KEY)
+updater = Updater(API_KEY)
 # Retrieve the dispatcher, which will be used to add handlers
 dispatcher = updater.dispatcher
 # Our states, as integers
@@ -59,6 +56,7 @@ oddDict = {}
 class ODD:
     def __init__(self, chatID):
         self.chatID = chatID
+        self.name = ""
         self.unit = ""
         self.battalion = ""        
         self.datetime = ""
@@ -66,33 +64,34 @@ class ODD:
         self.wpn = ""
         self.butt = 0
         self.defPart = ""
-        self.defect = ""
+        self.defect = "Check Remark"
         self.rmk = "N/A"
 #=================================================================================================================
        
 def help(update_obj, context):
     try:
         help_string = """
-Welcome to the ODD Feedback Bot! Here you can report 
-your ODDs without spending time waiting for the
-notebook to be passed around!
+Welcome to the ODD Feedback Bot! 
+Here you can report your ODDs 
+without spending time waiting 
+for the notebook to be passed around!
 
-/start will start the bot and will lead you through
-a series of questions to easily report the required
-information
+/start will start the bot and will
+lead you through a series of questions
+to easily report the required information
 
-If you are having any issues or suggestions please 
-contact 62FMD at 6AMB
+If you are having any issues or
+suggestions please contact 62FMD at 6AMB
 
         
         """
 
         update_obj.message.reply_text(help_string)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
 
     except Exception as e:
         cancel(e, context)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
 #=================================================================================================================
 
 # The entry function
@@ -137,7 +136,7 @@ def batStep(update_obj, context):
         return COYSTEP
     except Exception as e:
         cancel(update_obj, context)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
     
 
 
@@ -159,7 +158,7 @@ def coyStep(update_obj, context):
         return WPNSTEP  
     except Exception as e:
         cancel(update_obj, context)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
 
 def wpnStep(update_obj, context):
     try: 
@@ -180,7 +179,7 @@ def wpnStep(update_obj, context):
 
     except Exception as e:
         cancel(update_obj, context)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
 
 
 def buttStep(update_obj, context):
@@ -198,7 +197,7 @@ def buttStep(update_obj, context):
         return DEFECTSTEP 
     except Exception as e:        
         cancel(update_obj, context)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
 
 def defectStep(update_obj, context):
     try:
@@ -218,7 +217,7 @@ def defectStep(update_obj, context):
         return DEFECTIDSTEP
     except Exception as e:        
         cancel(update_obj, context)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
 
 def defectIDStep(update_obj, context):
     try:
@@ -242,7 +241,7 @@ def defectIDStep(update_obj, context):
             return RMKCHKSTEP
     except Exception as e:        
         cancel(update_obj, context)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
 
 def rmkchkStep(update_obj, context):
     try:
@@ -261,7 +260,7 @@ def rmkchkStep(update_obj, context):
 
     except Exception as e:        
         cancel(update_obj, context)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
 
 
 def check_yes_or_no(update_obj, context):
@@ -278,15 +277,15 @@ def check_yes_or_no(update_obj, context):
             update_obj.message.reply_text("Enter remarks below or click QUIT to end",  reply_markup=kb)
             return END
         elif msg == 'No':
-            first_name = update_obj.message.from_user['first_name']
+            odd.name = update_obj.message.from_user['first_name']
             update_obj.message.reply_text(
-            f"Thank you {first_name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
+            f"Thank you {odd.name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
             )
-            sheet.append_row([str(odd.datetime), f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
-            return telegram.ext.ConversationHandler.END
+            sheet.append_row([str(odd.datetime),odd.name, f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
+            return ConversationHandler.END
     except Exception as e:        
         cancel(update_obj, context)
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
 
 
 
@@ -297,19 +296,17 @@ def end(update_obj, context):
         msg = update_obj.message.text
         odd = oddDict[chat_id]
         odd.rmk = msg
+        odd.name = update_obj.message.from_user['first_name']
         if msg == "QUIT":
             return cancel(update_obj, context)  
-        sheet.append_row([str(odd.datetime), f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
-
-        # get the user's first name
-        first_name = update_obj.message.from_user['first_name']
+        sheet.append_row([str(odd.datetime),odd.name, f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
         update_obj.message.reply_text(
-            f"Thank you {first_name} for your report! Click /start to start again", reply_markup=telegram.ReplyKeyboardRemove()
+            f"Thank you {odd.name} for your report! Click /start to start again", reply_markup=telegram.ReplyKeyboardRemove()
         )
-        return telegram.ext.ConversationHandler.END
+        return ConversationHandler.END
     except Exception as e:        
         cancel(update_obj, context)
-        return telegram.ext.ConversationHandler.END 
+        return ConversationHandler.END 
     
 
 
@@ -321,7 +318,7 @@ def cancel(update_obj, context):
     update_obj.message.reply_text(
         f"Okay, no question for you then, take care, {first_name}! Please click /start to start again",\
              reply_markup=telegram.ReplyKeyboardRemove())
-    return telegram.ext.ConversationHandler.END
+    return ConversationHandler.END
 
 def outside_of_handler(update_obj, context):
     # get the user's first name
@@ -329,31 +326,31 @@ def outside_of_handler(update_obj, context):
     update_obj.message.reply_text(
         f"Hi {first_name}! Please click /start to start the bot or click /help to learn more",\
              reply_markup=telegram.ReplyKeyboardRemove())
-    return telegram.ext.ConversationHandler.END
+    return ConversationHandler.END
 
 
 def main():
 
 
-    handler = telegram.ext.ConversationHandler(
-        entry_points=[telegram.ext.CommandHandler('start', start),telegram.ext.CommandHandler('help', help)],
+    handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start),CommandHandler('help', help)],
         states={
-                BATSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, batStep)],
-                COYSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, coyStep)],
-                WPNSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, wpnStep)],
-                BUTTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, buttStep)],
-                DEFECTSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, defectStep)],
-                DEFECTIDSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, defectIDStep)],
-                RMKCHKSTEP: [telegram.ext.MessageHandler(telegram.ext.Filters.text, rmkchkStep)],
-                YESORNO: [telegram.ext.MessageHandler(telegram.ext.Filters.text, check_yes_or_no)],
-                END: [telegram.ext.MessageHandler(telegram.ext.Filters.text, end)],
-                CANCEL: [telegram.ext.MessageHandler(telegram.ext.Filters.text, cancel)]
+                BATSTEP: [MessageHandler(Filters.text, batStep)],
+                COYSTEP: [MessageHandler(Filters.text, coyStep)],
+                WPNSTEP: [MessageHandler(Filters.text, wpnStep)],
+                BUTTSTEP: [MessageHandler(Filters.text, buttStep)],
+                DEFECTSTEP: [MessageHandler(Filters.text, defectStep)],
+                DEFECTIDSTEP: [MessageHandler(Filters.text, defectIDStep)],
+                RMKCHKSTEP: [MessageHandler(Filters.text, rmkchkStep)],
+                YESORNO: [MessageHandler(Filters.text, check_yes_or_no)],
+                END: [MessageHandler(Filters.text, end)],
+                CANCEL: [MessageHandler(Filters.text, cancel)]
         },
-        fallbacks=[telegram.ext.CommandHandler('cancel', cancel)],
+        fallbacks=[CommandHandler('cancel', cancel)],
         )
     # add the handler to the dispatcher
     dispatcher.add_handler(handler)
-    dispatcher.add_handler(telegram.ext.MessageHandler(telegram.ext.Filters.text | ~telegram.ext.Filters.text, outside_of_handler))
+    dispatcher.add_handler(MessageHandler(Filters.text | ~Filters.text, outside_of_handler))
 
     # start polling for updates from Telegram
     updater.start_webhook(listen="0.0.0.0",
