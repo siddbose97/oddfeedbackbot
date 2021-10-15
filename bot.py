@@ -54,9 +54,9 @@ data = gspread_dataframe.get_as_dataframe(sheet)
 oddDict = {}
 
 class ODD:
-    def __init__(self, chatID):
+    def __init__(self, chatID, first_name, last_name):
         self.chatID = chatID
-        self.name = ""
+        self.name = f'{first_name} {last_name}'
         self.unit = ""
         self.battalion = ""        
         self.datetime = ""
@@ -102,7 +102,9 @@ def start(update_obj, context):
         list1.append([telegram.KeyboardButton(text='QUIT')])
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
         chat_id = update_obj.message.chat_id
-        oddDict[chat_id] = ODD(chat_id)
+        first_name = update_obj.message.from_user['first_name']
+        last_name = update_obj.message.from_user['last_name']
+        oddDict[chat_id] = ODD(chat_id, first_name,last_name )
 
         update_obj.message.reply_text("Hello there, which unit are you from?",reply_markup=kb)
     # go to the Batallion state
@@ -277,9 +279,8 @@ def check_yes_or_no(update_obj, context):
             update_obj.message.reply_text("Enter remarks below or click QUIT to end",  reply_markup=kb)
             return END
         elif msg == 'No':
-            odd.name = update_obj.message.from_user['first_name']
             update_obj.message.reply_text(
-            f"Thank you {odd.name} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
+            f"Thank you {odd.name.split()[0]} for your report!", reply_markup=telegram.ReplyKeyboardRemove()
             )
             sheet.append_row([str(odd.datetime),odd.name, f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
             return ConversationHandler.END
@@ -296,12 +297,11 @@ def end(update_obj, context):
         msg = update_obj.message.text
         odd = oddDict[chat_id]
         odd.rmk = msg
-        odd.name = update_obj.message.from_user['first_name']
         if msg == "QUIT":
             return cancel(update_obj, context)  
         sheet.append_row([str(odd.datetime),odd.name, f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
         update_obj.message.reply_text(
-            f"Thank you {odd.name} for your report! Click /start to start again", reply_markup=telegram.ReplyKeyboardRemove()
+            f"Thank you {odd.name.split()[0]} for your report! Click /start to start again", reply_markup=telegram.ReplyKeyboardRemove()
         )
         return ConversationHandler.END
     except Exception as e:        
