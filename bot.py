@@ -233,7 +233,7 @@ def defectIDStep(update_obj, context):
             update_obj.message.reply_text("Please explain as best as possible what the issue is")
             return END
         else:
-            list1 = [[telegram.KeyboardButton(text=defect)] for defect in list(weaponDefects[odd.wpn][odd.defPart].values())]
+            list1 = [[telegram.KeyboardButton(text=defect)] for defect in weaponDefects[odd.wpn][odd.defPart]]
             list1.append([telegram.KeyboardButton(text='QUIT')])
 
             kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)

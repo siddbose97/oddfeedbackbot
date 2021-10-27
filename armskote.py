@@ -6,86 +6,86 @@ import buttons
 mainDB = {
     'Armour':{
         '40SAR':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW ", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW ", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW ", "GPMG"],
+            'Bravo': ["SAR21", "SAW ", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         },
         '41SAR':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW", "GPMG"],
+            'Bravo': ["SAR21", "SAW", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         },
         '42SAR':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW", "GPMG"],
+            'Bravo': ["SAR21", "SAW", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         },
         '48SAR':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW", "GPMG"],
+            'Bravo': ["SAR21", "SAW", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         },
     },
     'Artillery':{
         '21SA':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW", "GPMG"],
+            'Bravo': ["SAR21", "SAW", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         }
     },
     'Engineers':{
         '30SCE':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW", "GPMG"],
+            'Bravo': ["SAR21", "SAW", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         }
     },
     'Commandos':{
         '1st':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW", "GPMG"],
+            'Bravo': ["SAR21", "SAW", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         }
     },
     'Guards':{
         '1st':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW", "GPMG"],
+            'Bravo': ["SAR21", "SAW", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         }
     },
     'Infantry':{
         '1SIR':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW", "GPMG"],
+            'Bravo': ["SAR21", "SAW", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         }
     },
     'Signals':{
         '1SIG':{
-            'HQ': ["SAR21", "SAW", "GPMG INF"],
-            'Support': ["SAR21", "SAW", "GPMG INF"],
-            'Alpha': ["SAR21", "SAW", "GPMG INF"],
-            'Bravo': ["SAR21", "SAW", "GPMG INF"],
-            'Charlie': ["SAR21", "SAW", "GPMG INF"]
+            'HQ': ["SAR21", "SAW", "GPMG"],
+            'Support': ["SAR21", "SAW", "GPMG"],
+            'Alpha': ["SAR21", "SAW", "GPMG"],
+            'Bravo': ["SAR21", "SAW", "GPMG"],
+            'Charlie': ["SAR21", "SAW", "GPMG"]
         }
     },
 
