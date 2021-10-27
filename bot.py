@@ -300,6 +300,21 @@ def end(update_obj, context):
         if msg == "QUIT":
             return cancel(update_obj, context)  
         sheet.append_row([str(odd.datetime),odd.name, f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
+        report_summary = f"""
+        This is your submitted report!
+        
+        Name: {odd.name}
+        Company: {odd.battalion} {odd.coy}
+        Weapon Type: {odd.wpn}
+        Defect Part: {odd.defPart}
+        Defect: {odd.defect}
+        Additional Remarks: {odd.rmk}
+        
+        """
+        update_obj.message.reply_text(
+            report_summary, reply_markup=telegram.ReplyKeyboardRemove()
+        )
+        
         update_obj.message.reply_text(
             f"Thank you {odd.name.split()[0]} for your report! Click /start to start again", reply_markup=telegram.ReplyKeyboardRemove()
         )
