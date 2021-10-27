@@ -279,6 +279,21 @@ def check_yes_or_no(update_obj, context):
             update_obj.message.reply_text("Enter remarks below or click QUIT to end",  reply_markup=kb)
             return END
         elif msg == 'No':
+            report_summary = f"""
+            This is your submitted report!
+            
+            Name: {odd.name}
+            Company: {odd.battalion} {odd.coy}
+            Weapon Type: {odd.wpn}
+            Defect Part: {odd.defPart}
+            Defect: {odd.defect}
+            Additional Remarks: {odd.rmk}
+            
+            """
+            update_obj.message.reply_text(
+                report_summary, reply_markup=telegram.ReplyKeyboardRemove()
+            )
+
             update_obj.message.reply_text(
             f"Thank you {odd.name.split()[0]} for your report! Please click /start to restart the bot", reply_markup=telegram.ReplyKeyboardRemove()
             )
@@ -302,7 +317,7 @@ def end(update_obj, context):
         sheet.append_row([str(odd.datetime),odd.name, f"{odd.battalion} {odd.coy}", odd.wpn, odd.butt,odd.defPart, odd.defect, odd.rmk])
         report_summary = f"""
         This is your submitted report!
-        
+
         Name: {odd.name}
         Company: {odd.battalion} {odd.coy}
         Weapon Type: {odd.wpn}

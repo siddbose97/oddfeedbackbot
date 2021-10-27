@@ -81,7 +81,45 @@ weaponDefects = {
     "GPMG": {
         "Barrel":[
             "Bent or curved",
-            "Handguard Loose, Cracked or Missing",
+            "Incorrect Barrel Serial Number",
+            "Other"
+        ],
+        "Flash Suppressor":[
+            "Flash Suppressor missing",
+            "Washer missing",
+            "Other"
+        ],
+        "Gas Regulator":[
+            "Gas Regulator not working",
+            "Retaining clip missing",
+            "Other"
+        ],
+        "Carrying Handle and Bipod":[
+            "Carrying handle broken",
+            "Bipod leg parts damaged or missing",
+            "Other"
+        ],
+        "Feed Tray and Cover":[
+            "Parts broken or missing",
+            "Mechanism stuck or burred",
+            "Other"
+        ],
+        "Trigger Mechanism":[
+            "Trigger not functioning correctly",
+            "Other"
+        ],
+        "Weapon Body":[
+            "Barrel locking catch missing or not working",
+            "Ejection port cover not working",
+            "Cocking handle not sliding properly",
+            "Rear sight or foresight broken or missing"
+            "Other"
+        ],
+        "Functional Check":[
+            "Barrel doesn't fit correctly",
+            "Barrel lock does not hold in place",
+            "Trigger safety does not work",
+            "Feed cover does not stay at 45 and 90 degrees",
             "Other"
         ],
     }
