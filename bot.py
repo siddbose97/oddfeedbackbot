@@ -221,7 +221,7 @@ def defectStep(update_obj, context):
 
         return DEFECTIDSTEP
     except ValueError:
-        update_obj.message.reply_text("Error: Butt number must be numeric. Press /start to restart",reply_markup=kb)
+        update_obj.message.reply_text("Error: Butt number must be numeric. Press /start to restart", reply_markup=telegram.ReplyKeyboardRemove())
         return ConversationHandler.END
     except Exception as e:        
         cancel(update_obj, context)
