@@ -194,7 +194,8 @@ def buttStep(update_obj, context):
             return cancel(update_obj, context)    
         list1 = [[telegram.KeyboardButton(text='QUIT')]]
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
-        update_obj.message.reply_text("Enter the Weapon's butt number or click QUIT to end" ,reply_markup=kb)
+        reply_string = "Enter the Weapon's butt number or click QUIT to end. Please only input numeric values"
+        update_obj.message.reply_text( reply_string,reply_markup=kb)
         
         return DEFECTSTEP 
     except Exception as e:        
@@ -206,6 +207,8 @@ def defectStep(update_obj, context):
         chat_id = update_obj.message.chat_id
         msg = update_obj.message.text
         odd = oddDict[chat_id]
+        if not msg.isdigit():
+            raise ValueError
         odd.butt = msg
         if msg == "QUIT":
             return cancel(update_obj, context)  
@@ -217,6 +220,9 @@ def defectStep(update_obj, context):
         update_obj.message.reply_text("What part has the defect?",reply_markup=kb)
 
         return DEFECTIDSTEP
+    except ValueError:
+        update_obj.message.reply_text("Error: Butt number must be numeric. Press /start to restart",reply_markup=kb)
+        return ConversationHandler.END
     except Exception as e:        
         cancel(update_obj, context)
         return ConversationHandler.END
@@ -250,6 +256,12 @@ def rmkchkStep(update_obj, context):
         chat_id = update_obj.message.chat_id
         msg = update_obj.message.text
         odd = oddDict[chat_id]
+        if msg == 'Other':
+            list1 = [[telegram.KeyboardButton(text='QUIT')]]
+
+            kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
+            update_obj.message.reply_text("Enter remarks below or click QUIT to end",  reply_markup=kb)
+            return END
         odd.defect = msg
         if msg == "QUIT":
             return cancel(update_obj, context)  
