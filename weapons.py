@@ -73,18 +73,22 @@ weaponDefects = {
     },
     "SAW": {
         "Barrel and Gas Regulator":[
-            "Bent or curved",
-            "Handguard Loose, Cracked or Missing",
+            "Barrel parts broken or deficient",
+            "Carrying handle loose, broken, or deficient",
+            "Tritium sight faded",
+            "Tritium sight bent or broken",
+            "Gas regulator parts missing or broken",
+            "Gas regulator lanyard broken or missing",
             "Other"
         ],
         "Bolt Carrier Group":[
-            "Bent or curved",
-            "Handguard Loose, Cracked or Missing",
+            "Bolt carrier parts missing",
+            "Extractor/Ejector Spring missing",
+            "Extractor/Ejector pin missing or broken",
             "Other"
         ],
         "Bipod Assembly":[
-            "Bent or curved",
-            "Handguard Loose, Cracked or Missing",
+            "Parts Bent, Cracked or Missing",
             "Other"
         ],
         "Gun Body (Receiver Group)":[
