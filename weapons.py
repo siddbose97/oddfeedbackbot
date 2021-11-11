@@ -72,9 +72,41 @@ weaponDefects = {
         ]
     },
     "SAW": {
-        "Barrel":[
+        "Barrel and Gas Regulator":[
             "Bent or curved",
             "Handguard Loose, Cracked or Missing",
+            "Other"
+        ],
+        "Bolt Carrier Group":[
+            "Bent or curved",
+            "Handguard Loose, Cracked or Missing",
+            "Other"
+        ],
+        "Bipod Assembly":[
+            "Bent or curved",
+            "Handguard Loose, Cracked or Missing",
+            "Other"
+        ],
+        "Gun Body (Receiver Group)":[
+            "Parts broken or missing",
+            "Barrel cannot be removed or inserted properly",
+            "Rear sight not working",
+            "Magazine catch broken or missing",
+            "Selector lever not working",
+            "Trigger not working",
+            "Cocking handle broken or parts missing",
+            "Front grip screw missing",
+            "Butt cracked or damaged",
+            "Carrying handle broken or damaged",
+            "Swivel broken, missing or damaged",
+            "Other"
+        ],
+        "Functional Check":[
+            "Barrel cannot be connected to the body",
+            "Gun can fire when put to safe",
+            "Gun cannot fire when put to fire",
+            "Cocking handle does not slide smoothly",
+            "Magazine does not stay in gun",
             "Other"
         ],
     },

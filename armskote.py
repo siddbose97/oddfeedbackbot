@@ -62,12 +62,12 @@ mainDB = {
         }
     },
     'Guards':{
-        '1st':{
+        'ADF':{
             'HQ': ["SAR21", "SAW", "GPMG"],
-            'Support': ["SAR21", "SAW", "GPMG"],
-            'Alpha': ["SAR21", "SAW", "GPMG"],
-            'Bravo': ["SAR21", "SAW", "GPMG"],
-            'Charlie': ["SAR21", "SAW", "GPMG"]
+            'Spear': ["SAR21", "SAW", "GPMG"],
+            '1st': ["SAR21", "SAW", "GPMG"],
+            'Ace': ["SAR21", "SAW", "GPMG"],
+            'Dragon': ["SAR21", "SAW", "GPMG"]
         }
     },
     'Infantry':{
