@@ -332,7 +332,6 @@ def end(update_obj, context):
         report_summary = f"""
         This is your submitted report!
 
-        Name: {odd.name}
         Company: {odd.battalion} {odd.coy}
         Weapon Type: {odd.wpn}
         Defect Part: {odd.defPart}
