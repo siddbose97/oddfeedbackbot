@@ -196,7 +196,10 @@ def buttStep(update_obj, context):
             return cancel(update_obj, context)    
         list1 = [[telegram.KeyboardButton(text='QUIT')]]
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
-        reply_string = "Enter the Weapon's butt number or click QUIT to end. Please only input numeric values"
+        reply_string = """Enter the Weapon's butt number or click QUIT to end. Please only input numeric values
+        
+        Example: Butt number is K329, please input 329
+        """
         update_obj.message.reply_text( reply_string,reply_markup=kb)
         
         return DEFECTSTEP 
