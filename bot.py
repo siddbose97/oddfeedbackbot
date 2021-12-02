@@ -151,7 +151,7 @@ def coyStep(update_obj, context):
         odd.battalion = msg
         if msg == "QUIT":
             return cancel(update_obj, context)
-        list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in list(mainDB[odd.unit][odd.battalion].keys())]
+        list1 = [[telegram.KeyboardButton(text=battalion)] for battalion in mainDB[odd.unit][odd.battalion]]
         list1.append([telegram.KeyboardButton(text='QUIT')])
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
@@ -171,7 +171,9 @@ def wpnStep(update_obj, context):
         if msg == "QUIT":
             return cancel(update_obj, context)
 
-        list1 = [[telegram.KeyboardButton(text=weapon)] for weapon in mainDB[odd.unit][odd.battalion][odd.coy]]
+        
+        list1 = [[telegram.KeyboardButton(text=weapon)] for weapon in ["SAR21", "SAW", "GPMG"]]
+        #list1 = [[telegram.KeyboardButton(text=weapon)] for weapon in mainDB[odd.unit][odd.battalion][odd.coy]]
         list1.append([telegram.KeyboardButton(text='QUIT')])
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
